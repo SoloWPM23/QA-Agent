@@ -13,7 +13,7 @@ import json
 import httpx
 
 from app.llm.base import ChatMessage, LLMProviderError, register
-from app.llm.schemas import AuthConfig, TestCase, TestSuite
+from app.llm.schemas import AuthConfig, HttpRequest, TestCase, TestSuite
 
 # Model name loaded into LM Studio, passed as the chat completion model.
 _DEFAULT_MODEL = "meta-llama-3.1-8b-instruct"
@@ -146,6 +146,7 @@ class LMStudioProvider:
                 case = TestCase(
                     id="",
                     title="",
+                    request=HttpRequest(method="GET", path=""),
                     needs_review=True,
                     review_reason=f"Gagal mem-parsing chunk: {exc}",
                 )

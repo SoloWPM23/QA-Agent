@@ -37,6 +37,19 @@ Expected Schema: Response harus memuat field: access_token (string), token_type 
 
 _CONVENTIONS = """
 Konvensi:
+- Label "ID" di tabel → field "id" pada JSON output.
+- Label "Judul" di tabel → field "title" pada JSON output.
+- Label "Deskripsi" di tabel → field "summary" pada JSON output (string atau null).
+- Label "Method" di tabel → "request.method" pada JSON output.
+- Label "Path" di tabel → "request.path" pada JSON output.
+- Label "Headers" di tabel → "request.headers" pada JSON output.
+- Label "Query Params" di tabel → "request.query" pada JSON output.
+- Label "Body (JSON)" di tabel → "request.body" pada JSON output.
+- Label "Expected Status Code" di tabel → "expected.status" pada JSON output.
+- Label "Expected Schema" di tabel → "expected.schema_narration" pada JSON output.
+- Label "JSONPath Checks" di tabel → "expected.jsonpath" pada JSON output (array).
+- Label "Regex" di tabel → "expected.regex" pada JSON output (string atau null).
+- Label "Contains" di tabel → "expected.contains" pada JSON output (array).
 - ID memakai pola TC-000 (3 digit).
 - Method HANYA salah satu dari: GET, POST, PUT, PATCH, DELETE.
     Jika dokumen menulis method yang tidak termasuk daftar itu (misal TRACE,
@@ -56,6 +69,12 @@ Konvensi:
 - Body (JSON): tulis sebagai objek JSON valid apa adanya.
 - Expected Status Code: hanya berisi bilangan bulat kode HTTP.
 - Expected Schema: SALIN TERLENGKAPNYA VERBATIM (termasuk "field (type)") ke expected.schema_narration. JANGAN ubah kata-kata atau dikonversi menjadi JSON.
+- JSONPath Checks: jika berisi daftar path yang dipisah koma, konversi menjadi
+    array of strings (mis. "$.id, $.name" → ["$.id", "$.name"]). Jika hanya satu
+    path, tetap masukkan ke array (mis. "$.id" → ["$.id"]).
+- Regex: SALIN regex apa adanya. Jika kosong atau "(tidak ada)", gunakan null.
+- Contains: jika berisi substring yang dipisah koma, konversi menjadi array.
+    Jika kosong atau "(tidak ada)", gunakan [] kosong.
 - Simbol "(tidak ada)", "Tidak ada", "-", atau kosong:
     - Untuk field nullable string (summary, regex, schema_narration,
       review_reason), gunakan null.

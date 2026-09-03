@@ -2,10 +2,21 @@
 
 from __future__ import annotations
 
+import json
+
 from docx import Document
 from docx.shared import Inches
 
 from app.llm.openapi_schemas import GeneratedTestCase
+
+
+def _pretty_json(value: str) -> str:
+    """If value is valid JSON, pretty-print it; otherwise return as-is."""
+    try:
+        obj = json.loads(value)
+        return json.dumps(obj, indent=2, ensure_ascii=False)
+    except (json.JSONDecodeError, TypeError):
+        return value
 
 
 def generate_test_suite_docx(
@@ -30,6 +41,8 @@ def generate_test_suite_docx(
         header_cells[0].text = f"Test Case {case.id}"
         header_cells[1].text = f"Test Case {case.id}"
 
+        body_value = _pretty_json(case.body)
+
         rows = [
             ("ID", case.id),
             ("Judul", case.judul),
@@ -38,7 +51,7 @@ def generate_test_suite_docx(
             ("Path", case.path),
             ("Headers", case.headers),
             ("Query Params", case.query_params),
-            ("Body (JSON)", case.body),
+            ("Body (JSON)", body_value),
             ("Expected Status Code", case.expected_status_code),
             ("Expected Schema", case.expected_schema),
             ("JSONPath Checks", case.jsonpath_checks),

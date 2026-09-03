@@ -95,6 +95,12 @@ class DocxAdapter:
         missing = [f for f in _REQUIRED_FIELDS if f not in fields]
         if missing:
             reasons.append(f"Field wajib tidak ada: {', '.join(missing)}.")
+        empty_required = [f for f in _REQUIRED_FIELDS if f in fields and not fields[f].strip()]
+        if empty_required:
+            reasons.append(f"Field wajib kosong: {', '.join(empty_required)}.")
+        path = fields.get("Path", "")
+        if "{" in path and "}" in path:
+            reasons.append(f"Path berisi placeholder parameter: {path}.")
         if reasons:
             block.needs_review = True
             block.review_reason = " ".join(reasons)

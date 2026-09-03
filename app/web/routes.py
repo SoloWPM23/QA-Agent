@@ -248,6 +248,17 @@ async def convert_openapi(
         result = await asyncio.to_thread(convert_openapi_to_suite, provider, openapi_content)
         result.cases = sanitize_cases(result.cases)
 
+        if not result.cases:
+            details = (
+                "; ".join(result.failed)
+                if result.failed
+                else "Tidak ada test case yang dihasilkan."
+            )
+            raise HTTPException(
+                status_code=422,
+                detail=f"Konversi OpenAPI gagal menghasilkan test case: {details}",
+            )
+
         output_path = str(Path(load_config().temp_upload_dir) / f"{file.filename or 'suite'}.docx")
         Path(load_config().temp_upload_dir).mkdir(parents=True, exist_ok=True)
         generate_test_suite_docx(
@@ -258,7 +269,7 @@ async def convert_openapi(
         file_bytes = await asyncio.to_thread(Path(output_path).read_bytes)
         return StreamingResponse(
             BytesIO(file_bytes),
-            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             headers={"Content-Disposition": f"attachment; filename={safe_name}"},
         )
     except Exception as exc:
