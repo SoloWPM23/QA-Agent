@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI QA Agent</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="page-header">
+      <h1>AI QA Agent</h1>
+      <p class="subtitle">Jalankan dokumen test suite terhadap REST endpoint secara otomatis.</p>
+    </header>
+
+    <section class="card">
+      <h2>Konfigurasi LLM</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="lmStudioUrl">Base URL LM Studio</label>
+          <input type="url" id="lmStudioUrl" name="lm_studio_url" placeholder="http://localhost:1234/v1" value="http://localhost:1234/v1">
+        </div>
+        <div class="form-group">
+          <label for="lmModel">Model Name</label>
+          <input type="text" id="lmModel" name="lm_model" placeholder="meta-llama-3.1-8b-instruct" value="meta-llama-3.1-8b-instruct">
+        </div>
+      </div>
+      <button type="button" id="testConnectionBtn" class="btn-secondary">Test Connection</button>
+      <div id="connectionStatus" class="connection-status hidden"></div>
+    </section>
+
+    <section class="card">
+      <h2>Konfigurasi Target API</h2>
+      <div class="form-group">
+        <label for="baseUrl">Base URL Target API</label>
+        <input type="url" id="baseUrl" name="base_url" placeholder="http://localhost:8000" required>
+        <div id="baseUrlError" class="field-error hidden"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="authType">Tipe Autentikasi</label>
+        <select id="authType" name="auth_type">
+          <option value="none">Tidak ada</option>
+          <option value="basic">Basic</option>
+          <option value="bearer">Bearer Token</option>
+          <option value="api_key">API Key</option>
+        </select>
+      </div>
+
+      <div id="authFields" class="auth-fields"></div>
+    </section>
+
+    <section class="card">
+      <h2>Upload Test Suite</h2>
+      <div class="form-group">
+        <label for="file" class="file-label">
+          <span class="file-button">Pilih File</span>
+          <span id="fileName" class="file-name">Belum ada file dipilih</span>
+        </label>
+        <input type="file" id="file" name="file" accept=".docx,.pdf,.txt,.md" required hidden>
+        <div id="fileError" class="field-error hidden"></div>
+      </div>
+
+      <button type="button" id="runBtn" class="btn-primary" disabled>Jalankan Test</button>
+      <a href="/openapi" class="btn-secondary" style="margin-left: 0.75rem;">Gunakan OpenAPI.json</a>
+    </section>
+
+    <div id="progressPanel" class="card progress-panel hidden">
+      <div class="spinner"></div>
+      <div class="progress-info">
+        <p class="progress-title">Sedang menjalankan test...</p>
+        <p id="currentCase" class="progress-case">-</p>
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultPanel" class="result-panel hidden">
+      <section class="card summary-card">
+        <h2>Ringkasan Hasil</h2>
+        <div class="summary-grid">
+          <div class="summary-box summary-total">
+            <span class="summary-number" id="summaryTotal">0</span>
+            <span class="summary-label">Total</span>
+          </div>
+          <div class="summary-box summary-pass">
+            <span class="summary-number" id="summaryPass">0</span>
+            <span class="summary-label">PASS</span>
+          </div>
+          <div class="summary-box summary-fail">
+            <span class="summary-number" id="summaryFail">0</span>
+            <span class="summary-label">FAIL</span>
+          </div>
+          <div class="summary-box summary-skip">
+            <span class="summary-number" id="summarySkip">0</span>
+            <span class="summary-label">SKIPPED</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="result-header">
+          <h2>Detail Test Case</h2>
+          <a id="downloadBtn" href="#" class="btn-secondary" download>Unduh Laporan (.xlsx)</a>
+        </div>
+        <div id="verdictList" class="verdict-list"></div>
+      </section>
+    </div>
+
+    <div id="status" class="status hidden"></div>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

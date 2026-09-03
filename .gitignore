@@ -1,0 +1,48 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project runtime artifacts
+reports/*
+!reports/.gitkeep
+tmp_uploads/*
+!tmp_uploads/.gitkeep
+
+# Test fixtures and generated artifacts
+*.xlsx
+*.docx
+!mock/test_suite.docx
+
+# User-provided template (do not commit)
+Template_Standar_Test_Suite.docx
+
+# Logs
+*.log
